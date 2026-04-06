@@ -3,28 +3,22 @@
 ## 1. System Design
 
 **a. Initial design**
-
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+I made four classes: Task, Pet, Owner, and Scheduler. Task stored activity details like time, frequency, and completion status. Pet held a list of tasks for one animal. Owner managed multiple pets. Scheduler pulled all the tasks together and handled sorting, filtering, and conflict detection.
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
-
+Yes, I added a pet_name field directly to the Task class. I did not include it at first, but when I started writing the filter and conflict methods I kept having to dig through Pet objects just to get the name. Adding it to Task directly made things a lot simpler.
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+The scheduler considers time of day, due date, and task frequency. I prioritized time first because a daily schedule only makes sense in chronological order. Due date keeps the view focused on today, and frequency handles whether a task repeats. These felt like the most practical constraints for a pet owner checking what needs to get done.
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+Conflict detection only flags tasks at the exact same time. Two tasks 15 minutes apart will not trigger a warning. This is fine for a pet care app since most tasks are short and owners are not scheduling things down to the minute anyway.
 
 ---
 
@@ -32,13 +26,11 @@
 
 **a. How you used AI**
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+I used AI to help design the class structure, generate the code, and draft the test suite. Prompts that referenced a specific file and asked for a concrete change were the most useful, like asking it to improve a specific method rather than asking something vague.
 
 **b. Judgment and verification**
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+The AI suggested using a nested loop for conflict detection. I switched it to a dictionary keyed by (time, date) since it only needs one pass through the list instead of comparing every task against every other task. I wrote two tests to verify it , one that expects a conflict warning and one that expects none.
 
 ---
 
@@ -46,26 +38,23 @@
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+I tested task completion, sorting, daily and weekly recurrence, conflict detection, and edge cases like empty pets and owners. These were important because they cover the core things the scheduler is supposed to do and the situations most likely to cause bugs.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
-
+Pretty confident in what is covered by the tests. If I had more time I would test bad time formats, marking the same task complete twice, and a pet with duplicate task names to make sure nothing breaks unexpectedly.
 ---
 
 ## 5. Reflection
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+Building and testing the logic before touching the UI was the right call. It made connecting everything to Streamlit much less stressful because I already knew the backend worked.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+I would add task duration so conflict detection can catch overlapping windows instead of just exact time matches. I would also add data persistence so nothing resets when the app reloads.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+The more specific your prompt, the better the output. Vague questions waste time. Knowing what you want before asking AI makes the whole process faster and cleaner.
